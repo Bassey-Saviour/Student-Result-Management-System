@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <title>Document</title>
+</head>
+
+<body>
+  <h2>Upload Student Result</h2>
+
+  <form action="/cgi-bin/upload_results.py" method="post">
+
+    <label>Student ID</label>
+    <input type="number" name="student_id" required>
+
+    <label>Course ID</label>
+    <input type="number" name="course_id" required>
+
+    <label>Score</label>
+    <input type="number" name="score" required>
+
+    <button type="submit">Upload Result</button>
+  </form>
+</body>
+
+</html>
