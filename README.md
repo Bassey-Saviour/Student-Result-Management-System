@@ -2,7 +2,7 @@
 
 A system for management results of students in a school, for COSC 333 / ITGY 401
 
-# Student Result Management System (SR MS)
+# Student Result Management System (SRMS)
 
 ## Project Structure
 
@@ -25,8 +25,8 @@ student_result_management_system/
 │
 ├── database/
 │ ├── schema.sql
-│ ├── sample_data.sql
 │ └── erd.png
+│
 │
 └── README.md
 
@@ -34,8 +34,9 @@ student_result_management_system/
 
 1. Install Python 3
 2. Install MySQL
-3. Create the database using schema.sql
+3. Create the database using SRMS-copy.sql
 4. Start CGI server:
    ```bash
    python3 -m http.server --cgi 8000
    ```
+5. Open localhost on port 8000

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/public/css/styles.css">
   <title>Student View - SRMS</title>
 </head>
+
 <body>
   <header>
     <h1>Student Result Management System - Student View</h1>
@@ -35,48 +37,64 @@
           </tr>
         </thead>
         <tbody id="results-table-body">
-          <tr>
-            <td>CSC401</td>
-            <td>Data Structures</td>
-            <td>3</td>
-            <td>78</td>
-            <td>A</td>
-          </tr>
-          <tr>
-            <td>CIS402</td>
-            <td>Database Systems</td>
-            <td>3</td>
-            <td>65</td>
-            <td>B+</td>
-          </tr>
-          <tr>
-            <td>CSC403</td>
-            <td>Operating Systems</td>
-            <td>4</td>
-            <td>70</td>
-            <td>A-</td>
-          </tr>
-          <tr>
-            <td>CIS404</td>
-            <td>Software Engineering</td>
-            <td>3</td>
-            <td>82</td>
-            <td>A</td>
-          </tr>
+          <!-- Results will be injected here by the student_results CGI -->
         </tbody>
       </table>
-      <p aria-live="polite" class="gpa-text">GPA: 3.75</p>
+      <p aria-live="polite" class="gpa-text">GPA: <span id="gpa-value">-</span></p>
     </section>
   </main>
   <footer>
     &copy; 2024 SRMS Frontend. All rights reserved.
   </footer>
   <script>
-    // Minimal JS to toggle results display on form submit
-    document.getElementById('student-form').addEventListener('submit', function(e) {
+    // Fetch student results from CGI and render the table
+    const form = document.getElementById('student-form');
+    const resultsSection = document.getElementById('results-section');
+    const tbody = document.getElementById('results-table-body');
+    const gpaEl = document.getElementById('gpa-value');
+
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
-      document.getElementById('results-section').classList.remove('hidden');
+      const matric = document.getElementById('matricNo').value.trim();
+      if (!matric) return;
+
+      try {
+        const resp = await fetch('/cgi-bin/student_results.py?matricNo=' + encodeURIComponent(matric), {
+          method: 'GET',
+          credentials: 'same-origin'
+        });
+        if (!resp.ok) throw new Error('Network response was not ok');
+        const data = await resp.json();
+        if (data.error) {
+          alert('Error: ' + data.error);
+          return;
+        }
+
+        // populate table
+        tbody.innerHTML = '';
+        if (!data.results || data.results.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5">No results found for ' + matric + '</td></tr>';
+          gpaEl.textContent = '-';
+        } else {
+          data.results.forEach(r => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${r.course_code || ''}</td>
+              <td>${r.course_title || ''}</td>
+              <td>${r.credit_units || ''}</td>
+              <td>${r.score || ''}</td>
+              <td>${r.grade || ''}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+          gpaEl.textContent = data.gpa !== null ? data.gpa : '-';
+        }
+        resultsSection.classList.remove('hidden');
+      } catch (err) {
+        alert('Failed to load results: ' + err.message);
+      }
     });
   </script>
 </body>
+
 </html>
