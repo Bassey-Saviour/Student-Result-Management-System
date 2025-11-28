@@ -2,7 +2,7 @@
 
 A system for management results of students in a school, for COSC 333 / ITGY 401
 
-# Student Result Management System (SRMS)
+# Student Result Management System (SR MS)
 
 ## Project Structure
 

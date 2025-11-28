@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css">
+  <title>Admin View - SRMS</title>
+</head>
+<body>
+  <header>
+    <h1>Student Result Management System - Admin View</h1>
+  </header>
+  <nav>
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="student.html" class="nav-link">Student View</a>
+    <a href="lecturer.html" class="nav-link">Lecturer View</a>
+  </nav>
+  <main class="container">
+    <h2 class="text-center mb-1">Management Dashboard</h2>
+
+    <div role="tablist" aria-label="Admin Management Tabs" class="tablist">
+      <button id="tab-students" role="tab" aria-selected="true" aria-controls="students" class="tab active">Students</button>
+      <button id="tab-lecturers" role="tab" aria-selected="false" aria-controls="lecturers" class="tab">Lecturers</button>
+      <button id="tab-courses" role="tab" aria-selected="false" aria-controls="courses" class="tab">Courses</button>
+    </div>
+
+    <section id="students" role="tabpanel" aria-labelledby="tab-students" class="tabpanel active">
+      <h3>Manage Students</h3>
+      <table aria-label="Students Table">
+        <thead>
+          <tr>
+            <th>Matric No</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Department</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>MAT4001</td><td>Alice</td><td>Johnson</td><td>alice.j@example.com</td><td>CS</td></tr>
+          <tr><td>MAT4002</td><td>Bob</td><td>Smith</td><td>bob.s@example.com</td><td>CIS</td></tr>
+        </tbody>
+      </table>
+      <form id="student-form" aria-label="Add/Edit Student" class="form-card">
+        <label for="studMatric">Matric Number:</label>
+        <input type="text" id="studMatric" name="studMatric" required />
+        <label for="studFirstName">First Name:</label>
+        <input type="text" id="studFirstName" name="studFirstName" required />
+        <label for="studLastName">Last Name:</label>
+        <input type="text" id="studLastName" name="studLastName" required />
+        <label for="studEmail">Email:</label>
+        <input type="email" id="studEmail" name="studEmail" required />
+        <label for="studDept">Department:</label>
+        <select id="studDept" name="studDept" required>
+          <option value="">Select department</option>
+          <option value="CS">CS</option>
+          <option value="CIS">CIS</option>
+        </select>
+        <button type="submit" class="btn">Add / Edit Student</button>
+      </form>
+      <hr />
+    </section>
+
+    <section id="lecturers" role="tabpanel" aria-labelledby="tab-lecturers" class="tabpanel">
+      <h3>Manage Lecturers</h3>
+      <table aria-label="Lecturers Table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Department</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>john.doe@example.com</td><td>John</td><td>Doe</td><td>CS</td></tr>
+          <tr><td>jane.smith@example.com</td><td>Jane</td><td>Smith</td><td>CIS</td></tr>
+        </tbody>
+      </table>
+      <form id="lecturer-form" aria-label="Add/Edit Lecturer" class="form-card">
+        <label for="lectEmail">Email:</label>
+        <input type="email" id="lectEmail" name="lectEmail" required />
+        <label for="lectFirstName">First Name:</label>
+        <input type="text" id="lectFirstName" name="lectFirstName" required />
+        <label for="lectLastName">Last Name:</label>
+        <input type="text" id="lectLastName" name="lectLastName" required />
+        <label for="lectDept">Department:</label>
+        <select id="lectDept" name="lectDept" required>
+          <option value="">Select department</option>
+          <option value="CS">CS</option>
+          <option value="CIS">CIS</option>
+        </select>
+        <button type="submit" class="btn">Add / Edit Lecturer</button>
+      </form>
+      <hr />
+    </section>
+
+    <section id="courses" role="tabpanel" aria-labelledby="tab-courses" class="tabpanel">
+      <h3>Manage Courses</h3>
+      <table aria-label="Courses Table">
+        <thead>
+          <tr>
+            <th>Course Code</th>
+            <th>Course Title</th>
+            <th>Units</th>
+            <th>Department</th>
+            <th>Lecturer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>CSC401</td><td>Data Structures</td><td>3</td><td>CS</td><td>John Doe</td></tr>
+          <tr><td>CIS402</td><td>Database Systems</td><td>3</td><td>CIS</td><td>Jane Smith</td></tr>
+        </tbody>
+      </table>
+      <form id="course-form" aria-label="Add/Edit Course" class="form-card">
+        <label for="courseCode">Course Code:</label>
+        <input type="text" id="courseCode" name="courseCode" required />
+        <label for="courseTitle">Course Title:</label>
+        <input type="text" id="courseTitle" name="courseTitle" required />
+        <label for="courseUnits">Units:</label>
+        <input type="number" id="courseUnits" name="courseUnits" min="1" max="6" required />
+        <label for="courseDept">Department:</label>
+        <select id="courseDept" name="courseDept" required>
+          <option value="">Select department</option>
+          <option value="CS">CS</option>
+          <option value="CIS">CIS</option>
+        </select>
+        <label for="courseLecturer">Lecturer:</label>
+        <input type="text" id="courseLecturer" name="courseLecturer" placeholder="Lecturer name" required />
+        <button type="submit" class="btn">Add / Edit Course</button>
+      </form>
+    </section>
+  </main>
+  <footer>
+    &copy; 2024 SRMS Frontend. All rights reserved.
+  </footer>
+  <script>
+    // Tab switching logic using CSS classes 
+    const tabs = document.querySelectorAll('[role="tab"]');
+    const tabContents = document.querySelectorAll('[role="tabpanel"]');
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach((t) => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+
+        tabContents.forEach((content) => {
+          content.classList.remove('active');
+        });
+        const selectedPanel = document.getElementById(tab.getAttribute('aria-controls'));
+        selectedPanel.classList.add('active');
+      });
+    });
+
+    // Simulate form submission feedback (for all forms)
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Form submitted (simulated).');
+        this.reset();
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,22 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/style.css">
-  <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css">
+  <title>Student View - SRMS</title>
 </head>
-
 <body>
-  <h2>Check Your Result</h2>
-
-  <form action="/cgi-bin/student_results.py" method="post">
-    <label>Matric Number</label>
-    <input type="text" name="matric_no" required>
-
-    <button type="submit">View Results</button>
-  </form>
-
-
+  <header>
+    <h1>Student Result Management System - Student View</h1>
+  </header>
+  <nav>
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="lecturer.html" class="nav-link">Lecturer View</a>
+    <a href="admin.html" class="nav-link">Admin View</a>
+  </nav>
+  <main class="container">
+    <h2 class="text-center mb-1">View Your Results</h2>
+    <form id="student-form" aria-label="Student Result Form" class="form-card">
+      <label for="matricNo">Matriculation Number:</label>
+      <input type="text" id="matricNo" name="matricNo" placeholder="Enter your matric number" required />
+      <button type="submit" class="btn">View Results</button>
+    </form>
+    <section id="results-section" class="results-section hidden">
+      <h3>Your Results</h3>
+      <table aria-label="Student Results Table" role="table">
+        <thead>
+          <tr>
+            <th>Course Code</th>
+            <th>Course Title</th>
+            <th>Units</th>
+            <th>Score</th>
+            <th>Grade</th>
+          </tr>
+        </thead>
+        <tbody id="results-table-body">
+          <tr>
+            <td>CSC401</td>
+            <td>Data Structures</td>
+            <td>3</td>
+            <td>78</td>
+            <td>A</td>
+          </tr>
+          <tr>
+            <td>CIS402</td>
+            <td>Database Systems</td>
+            <td>3</td>
+            <td>65</td>
+            <td>B+</td>
+          </tr>
+          <tr>
+            <td>CSC403</td>
+            <td>Operating Systems</td>
+            <td>4</td>
+            <td>70</td>
+            <td>A-</td>
+          </tr>
+          <tr>
+            <td>CIS404</td>
+            <td>Software Engineering</td>
+            <td>3</td>
+            <td>82</td>
+            <td>A</td>
+          </tr>
+        </tbody>
+      </table>
+      <p aria-live="polite" class="gpa-text">GPA: 3.75</p>
+    </section>
+  </main>
+  <footer>
+    &copy; 2024 SRMS Frontend. All rights reserved.
+  </footer>
+  <script>
+    // Minimal JS to toggle results display on form submit
+    document.getElementById('student-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.getElementById('results-section').classList.remove('hidden');
+    });
+  </script>
 </body>
+</html>

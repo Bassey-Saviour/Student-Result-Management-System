@@ -1,29 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/style.css">
-  <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css">
+  <title>Lecturer View - SRMS</title>
 </head>
-
 <body>
-  <h2>Upload Student Result</h2>
+  <header>
+    <h1>Student Result Management System - Lecturer View</h1>
+  </header>
+  <nav>
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="student.html" class="nav-link">Student View</a>
+    <a href="admin.html" class="nav-link">Admin View</a>
+  </nav>
+  <main class="container">
+    <h2 class="text-center mb-1">Upload Result</h2>
+    <form id="upload-form" aria-label="Lecturer Result Upload Form" class="form-card">
+      <label for="courseSelect">Course:</label>
+      <select id="courseSelect" name="course" required>
+        <option value="">Select course</option>
+        <option value="CSC401">CSC401 - Data Structures</option>
+        <option value="CIS402">CIS402 - Database Systems</option>
+        <option value="CSC403">CSC403 - Operating Systems</option>
+        <option value="CIS404">CIS404 - Software Engineering</option>
+      </select>
 
-  <form action="/cgi-bin/upload_results.py" method="post">
+      <label for="studentMatric">Student Matric No:</label>
+      <input type="text" id="studentMatric" name="studentMatric" placeholder="Enter student matric number" required />
 
-    <label>Student ID</label>
-    <input type="number" name="student_id" required>
+      <label for="scoreInput">Total Score:</label>
+      <input type="number" id="scoreInput" name="score" min="0" max="100" placeholder="Enter total score" required />
 
-    <label>Course ID</label>
-    <input type="number" name="course_id" required>
-
-    <label>Score</label>
-    <input type="number" name="score" required>
-
-    <button type="submit">Upload Result</button>
-  </form>
+      <button type="submit" class="btn">Upload Result</button>
+    </form>
+    <section id="upload-status" class="upload-status">
+      <p>Result uploaded successfully (simulated).</p>
+    </section>
+  </main>
+  <footer>
+    &copy; 2024 SRMS Frontend. All rights reserved.
+  </footer>
+  <script>
+    // Minimal JS to simulate form submission feedback
+    document.getElementById('upload-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const status = document.getElementById('upload-status');
+      status.style.display = 'block';
+      setTimeout(() => {
+        status.style.display = 'none';
+        this.reset();
+      }, 3000);
+    });
+  </script>
 </body>
-
 </html>
