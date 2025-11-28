@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/public/css/styles.css">
   <title>Admin View - SRMS</title>
 </head>
+
 <body>
   <header>
     <h1>Student Result Management System - Admin View</h1>
@@ -19,8 +21,10 @@
     <h2 class="text-center mb-1">Management Dashboard</h2>
 
     <div role="tablist" aria-label="Admin Management Tabs" class="tablist">
-      <button id="tab-students" role="tab" aria-selected="true" aria-controls="students" class="tab active">Students</button>
-      <button id="tab-lecturers" role="tab" aria-selected="false" aria-controls="lecturers" class="tab">Lecturers</button>
+      <button id="tab-students" role="tab" aria-selected="true" aria-controls="students"
+        class="tab active">Students</button>
+      <button id="tab-lecturers" role="tab" aria-selected="false" aria-controls="lecturers"
+        class="tab">Lecturers</button>
       <button id="tab-courses" role="tab" aria-selected="false" aria-controls="courses" class="tab">Courses</button>
     </div>
 
@@ -37,8 +41,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td>MAT4001</td><td>Alice</td><td>Johnson</td><td>alice.j@example.com</td><td>CS</td></tr>
-          <tr><td>MAT4002</td><td>Bob</td><td>Smith</td><td>bob.s@example.com</td><td>CIS</td></tr>
+          <tr>
+            <td>MAT4001</td>
+            <td>Alice</td>
+            <td>Johnson</td>
+            <td>alice.j@example.com</td>
+            <td>CS</td>
+          </tr>
+          <tr>
+            <td>MAT4002</td>
+            <td>Bob</td>
+            <td>Smith</td>
+            <td>bob.s@example.com</td>
+            <td>CIS</td>
+          </tr>
         </tbody>
       </table>
       <form id="student-form" aria-label="Add/Edit Student" class="form-card">
@@ -73,8 +89,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td>john.doe@example.com</td><td>John</td><td>Doe</td><td>CS</td></tr>
-          <tr><td>jane.smith@example.com</td><td>Jane</td><td>Smith</td><td>CIS</td></tr>
+          <tr>
+            <td>john.doe@example.com</td>
+            <td>John</td>
+            <td>Doe</td>
+            <td>CS</td>
+          </tr>
+          <tr>
+            <td>jane.smith@example.com</td>
+            <td>Jane</td>
+            <td>Smith</td>
+            <td>CIS</td>
+          </tr>
         </tbody>
       </table>
       <form id="lecturer-form" aria-label="Add/Edit Lecturer" class="form-card">
@@ -108,8 +134,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td>CSC401</td><td>Data Structures</td><td>3</td><td>CS</td><td>John Doe</td></tr>
-          <tr><td>CIS402</td><td>Database Systems</td><td>3</td><td>CIS</td><td>Jane Smith</td></tr>
+          <tr>
+            <td>CSC401</td>
+            <td>Data Structures</td>
+            <td>3</td>
+            <td>CS</td>
+            <td>John Doe</td>
+          </tr>
+          <tr>
+            <td>CIS402</td>
+            <td>Database Systems</td>
+            <td>3</td>
+            <td>CIS</td>
+            <td>Jane Smith</td>
+          </tr>
         </tbody>
       </table>
       <form id="course-form" aria-label="Add/Edit Course" class="form-card">
@@ -159,7 +197,7 @@
     // Simulate form submission feedback (for all forms)
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
-      form.addEventListener('submit', function(e) {
+      form.addEventListener('submit', function (e) {
         e.preventDefault();
         alert('Form submitted (simulated).');
         this.reset();
@@ -167,4 +205,5 @@
     });
   </script>
 </body>
+
 </html>

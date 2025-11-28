@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/public/css/styles.css">
   <title>Lecturer View - SRMS</title>
 </head>
+
 <body>
   <header>
     <h1>Student Result Management System - Lecturer View</h1>
@@ -16,43 +18,139 @@
     <a href="admin.html" class="nav-link">Admin View</a>
   </nav>
   <main class="container">
-    <h2 class="text-center mb-1">Upload Result</h2>
-    <form id="upload-form" aria-label="Lecturer Result Upload Form" class="form-card">
-      <label for="courseSelect">Course:</label>
-      <select id="courseSelect" name="course" required>
-        <option value="">Select course</option>
-        <option value="CSC401">CSC401 - Data Structures</option>
-        <option value="CIS402">CIS402 - Database Systems</option>
-        <option value="CSC403">CSC403 - Operating Systems</option>
-        <option value="CIS404">CIS404 - Software Engineering</option>
-      </select>
+    <h2 class="text-center mb-1">Lecturer Portal</h2>
 
-      <label for="studentMatric">Student Matric No:</label>
-      <input type="text" id="studentMatric" name="studentMatric" placeholder="Enter student matric number" required />
+    <!-- Lecturer Login Section -->
+    <section id="lecturer-login" class="form-card">
+      <h3>Login</h3>
+      <form id="login-form" aria-label="Lecturer Login Form">
+        <label for="lecturerEmail">Email:</label>
+        <input type="email" id="lecturerEmail" name="lecturerEmail" placeholder="Enter your email" required />
+        <button type="submit" class="btn">Login</button>
+      </form>
+    </section>
 
-      <label for="scoreInput">Total Score:</label>
-      <input type="number" id="scoreInput" name="score" min="0" max="100" placeholder="Enter total score" required />
+    <!-- Upload Result Section (hidden until login) -->
+    <section id="upload-section" class="hidden">
+      <h2 class="text-center mb-1">Upload Result</h2>
+      <form id="upload-form" aria-label="Lecturer Result Upload Form" class="form-card">
+        <label for="courseSelect">Course:</label>
+        <select id="courseSelect" name="course" required>
+          <option value="">Select course</option>
+          <!-- Courses will be populated here by JavaScript -->
+        </select>
 
-      <button type="submit" class="btn">Upload Result</button>
-    </form>
-    <section id="upload-status" class="upload-status">
-      <p>Result uploaded successfully (simulated).</p>
+        <label for="studentMatric">Student Matric No:</label>
+        <input type="text" id="studentMatric" name="studentMatric" placeholder="Enter student matric number" required />
+
+        <label for="scoreInput">Total Score:</label>
+        <input type="number" id="scoreInput" name="score" min="0" max="100" placeholder="Enter total score" required />
+
+        <button type="submit" class="btn">Upload Result</button>
+      </form>
+      <section id="upload-status" class="upload-status">
+        <p>Result uploaded successfully (simulated).</p>
+      </section>
     </section>
   </main>
   <footer>
     &copy; 2024 SRMS Frontend. All rights reserved.
   </footer>
   <script>
-    // Minimal JS to simulate form submission feedback
-    document.getElementById('upload-form').addEventListener('submit', function(e) {
+    // Lecturer login and course loading
+    const loginForm = document.getElementById('login-form');
+    const uploadSection = document.getElementById('upload-section');
+    const courseSelect = document.getElementById('courseSelect');
+    const uploadForm = document.getElementById('upload-form');
+    const uploadStatus = document.getElementById('upload-status');
+    let currentLecturerEmail = '';
+
+    loginForm.addEventListener('submit', async function (e) {
       e.preventDefault();
-      const status = document.getElementById('upload-status');
-      status.style.display = 'block';
-      setTimeout(() => {
-        status.style.display = 'none';
-        this.reset();
-      }, 3000);
+      const email = document.getElementById('lecturerEmail').value.trim();
+      if (!email) return;
+
+      try {
+        const resp = await fetch('/cgi-bin/lecturer_courses.py?lecturer_email=' + encodeURIComponent(email), {
+          method: 'GET',
+          credentials: 'same-origin'
+        });
+        if (!resp.ok) throw new Error('Network response was not ok');
+        const data = await resp.json();
+        if (data.error) {
+          alert('Error: ' + data.error);
+          return;
+        }
+
+        if (!data.courses || data.courses.length === 0) {
+          alert('No courses found for ' + email);
+          return;
+        }
+
+        // Populate course dropdown
+        courseSelect.innerHTML = '<option value="">Select course</option>';
+        data.courses.forEach(course => {
+          const option = document.createElement('option');
+          option.value = course.course_id;
+          option.textContent = course.course_code + ' - ' + course.course_title;
+          courseSelect.appendChild(option);
+        });
+
+        currentLecturerEmail = email;
+        document.getElementById('lecturer-login').style.display = 'none';
+        uploadSection.classList.remove('hidden');
+      } catch (err) {
+        alert('Failed to load courses: ' + err.message);
+      }
+    });
+
+    // Handle result upload to backend
+    uploadForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const courseId = document.getElementById('courseSelect').value;
+      const matric = document.getElementById('studentMatric').value.trim();
+      const scoreVal = document.getElementById('scoreInput').value;
+
+      if (!courseId || !matric || !scoreVal) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      try {
+        const params = new URLSearchParams({
+          course_id: courseId,
+          matric_no: matric,
+          score: scoreVal
+        });
+
+        const resp = await fetch('/cgi-bin/upload_results.py', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params.toString()
+        });
+
+        if (!resp.ok) throw new Error('Network response was not ok');
+        const data = await resp.json();
+
+        if (data.error) {
+          alert('Error: ' + data.error);
+          return;
+        }
+
+        // Show success message
+        const statusMsg = uploadStatus.querySelector('p');
+        statusMsg.textContent = 'Result uploaded successfully! Grade: ' + data.grade;
+        uploadStatus.style.display = 'block';
+        setTimeout(() => {
+          uploadStatus.style.display = 'none';
+          uploadForm.reset();
+        }, 3000);
+      } catch (err) {
+        alert('Failed to upload result: ' + err.message);
+      }
     });
   </script>
 </body>
+
 </html>
