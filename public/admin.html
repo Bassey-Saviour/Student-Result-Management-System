@@ -47,22 +47,25 @@
       </table>
       <form id="student-form" aria-label="Add/Edit Student" class="form-card">
         <label for="studMatric">Matric Number:</label>
-        <input type="text" id="studMatric" name="studMatric" required />
+        <input type="text" id="studMatric" name="studMatric" placeholder="e.g., 22/0006" required />
         <label for="studFirstName">First Name:</label>
         <input type="text" id="studFirstName" name="studFirstName" required />
         <label for="studLastName">Last Name:</label>
         <input type="text" id="studLastName" name="studLastName" required />
         <label for="studEmail">Email:</label>
-        <input type="email" id="studEmail" name="studEmail" required />
+        <input type="email" id="studEmail" name="studEmail" placeholder="student@student.edu" required />
+        <label for="studLevel">Level:</label>
+        <input type="number" id="studLevel" name="studLevel" value="400" min="100" max="500" step="100" required />
         <label for="studDept">Department:</label>
         <select id="studDept" name="studDept" required>
           <option value="">Select department</option>
           <option value="CSC">CS</option>
           <option value="CIS">CIS</option>
         </select>
-        <label for="studPword">Default Password:</label>
-        <input type="password" id="studPword" name="studPword" required />
-        <button type="submit" class="btn">Add / Edit Student</button>
+        <label for="studPword">Default Password</label>
+        <input type="password" name="studPword" id="studPword" required />
+        <button type="submit" class="btn">Add Student</button>
+        <div id="student-message" style="margin-top: 10px; display: none;"></div>
       </form>
       <hr />
     </section>
@@ -73,9 +76,9 @@
       <table aria-label="Lecturers Table" id="lecturers-table" style="display:none;">
         <thead>
           <tr>
+            <th>Email</th>
             <th>First Name</th>
             <th>Last Name</th>
-            <th>Email</th>
             <th>Department</th>
           </tr>
         </thead>
@@ -85,7 +88,7 @@
       </table>
       <form id="lecturer-form" aria-label="Add/Edit Lecturer" class="form-card">
         <label for="lectEmail">Email:</label>
-        <input type="email" id="lectEmail" name="lectEmail" required />
+        <input type="email" id="lectEmail" name="lectEmail" placeholder="lecturer@school.edu" required />
         <label for="lectFirstName">First Name:</label>
         <input type="text" id="lectFirstName" name="lectFirstName" required />
         <label for="lectLastName">Last Name:</label>
@@ -96,7 +99,10 @@
           <option value="CSC">CS</option>
           <option value="CIS">CIS</option>
         </select>
-        <button type="submit" class="btn">Add / Edit Lecturer</button>
+        <label for="lectPword">Default Password</label>
+        <input type="password" id="lectPword" name="lectPword" required />
+        <button type="submit" class="btn">Add Lecturer</button>
+        <div id="lecturer-message" style="margin-top: 10px; display: none;"></div>
       </form>
       <hr />
     </section>
@@ -120,7 +126,7 @@
       </table>
       <form id="course-form" aria-label="Add/Edit Course" class="form-card">
         <label for="courseCode">Course Code:</label>
-        <input type="text" id="courseCode" name="courseCode" required />
+        <input type="text" id="courseCode" name="courseCode" placeholder="e.g., CSC403" required />
         <label for="courseTitle">Course Title:</label>
         <input type="text" id="courseTitle" name="courseTitle" required />
         <label for="courseUnits">Units:</label>
@@ -131,9 +137,10 @@
           <option value="CSC">CS</option>
           <option value="CIS">CIS</option>
         </select>
-        <label for="courseLecturer">Lecturer:</label>
-        <input type="text" id="courseLecturer" name="courseLecturer" placeholder="Lecturer name" required />
-        <button type="submit" class="btn">Add / Edit Course</button>
+        <label for="courseLecturer">Lecturer Name:</label>
+        <input type="text" id="courseLecturer" name="courseLecturer" placeholder="Lecturer's first name" required />
+        <button type="submit" class="btn">Add Course</button>
+        <div id="course-message" style="margin-top: 10px; display: none;"></div>
       </form>
     </section>
   </main>
@@ -143,7 +150,7 @@
   <script>
     // Configuration
     const CGI_SCRIPT_URL = '/cgi-bin/get_all_data.py';
-
+    const CGI_SCRIPT_URL2 = '/cgi-bin/add_data.py';
     // Tab switching logic
     const tabs = document.querySelectorAll('[role="tab"]');
     const tabContents = document.querySelectorAll('[role="tabpanel"]');
@@ -169,13 +176,28 @@
     async function fetchData(action) {
       try {
         const response = await fetch(`${CGI_SCRIPT_URL}?action=${action}`);
+
+        // Log response status
+        console.log('Response status:', response.status);
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
+
+        // Get response text first
+        const text = await response.text();
+        console.log('Response text:', text.substring(0, 200)); // Log first 200 chars
+
+        // Try to parse as JSON
+        if (!text || text.trim() === '') {
+          throw new Error('Empty response from server');
+        }
+
+        const data = JSON.parse(text);
         return data;
       } catch (error) {
         console.error('Error fetching data:', error);
+        console.error('Full error:', error.message);
         return null;
       }
     }
@@ -222,9 +244,9 @@
       lecturers.forEach(lecturer => {
         const row = tbody.insertRow();
         row.innerHTML = `
-        <td>${lecturer.first_name}</td>
-        <td>${lecturer.last_name}</td>
-        <td>${lecturer.email}</td>
+          <td>${lecturer.email}</td>
+          <td>${lecturer.first_name}</td>
+          <td>${lecturer.last_name}</td>
           <td>${lecturer.department_code}</td>
         `;
       });
@@ -284,14 +306,131 @@
     // Load data when page loads
     window.addEventListener('DOMContentLoaded', loadAllData);
 
-    // Form submission handlers
-    const forms = document.querySelectorAll('form');
-    forms.forEach(form => {
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        alert('Form submitted (simulated). Implement POST endpoint to save data.');
+    // Function to submit form data
+    async function submitFormData(action, formData) {
+      try {
+        const params = new URLSearchParams();
+        params.append('action', action);
+
+        for (const [key, value] of Object.entries(formData)) {
+          params.append(key, value);
+        }
+
+        const response = await fetch(CGI_SCRIPT_URL2, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: params.toString()
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        return { success: false, message: error.message };
+      }
+    }
+
+    // Function to show message
+    function showMessage(elementId, message, isSuccess) {
+      const msgElement = document.getElementById(elementId);
+      msgElement.textContent = message;
+      msgElement.style.display = 'block';
+      msgElement.style.color = isSuccess ? 'green' : 'red';
+      msgElement.style.fontWeight = 'bold';
+
+      // Hide message after 5 seconds
+      setTimeout(() => {
+        msgElement.style.display = 'none';
+      }, 5000);
+    }
+
+    // Student form submission
+    document.getElementById('student-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const formData = {
+        matric_no: document.getElementById('studMatric').value,
+        first_name: document.getElementById('studFirstName').value,
+        last_name: document.getElementById('studLastName').value,
+        email: document.getElementById('studEmail').value,
+        level: document.getElementById('studLevel').value,
+        department_code: document.getElementById('studDept').value,
+        password: document.getElementById('studPword').value
+      };
+
+      const result = await submitFormData('add_student', formData);
+
+      if (result.success) {
+        showMessage('student-message', result.message, true);
         this.reset();
-      });
+        // Refresh the students table
+        const data = await fetchData('get_students');
+        if (data && data.students) {
+          populateStudents(data.students);
+        }
+      } else {
+        showMessage('student-message', 'Error: ' + result.message, false);
+      }
+    });
+
+    // Lecturer form submission
+    document.getElementById('lecturer-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const formData = {
+        email: document.getElementById('lectEmail').value,
+        first_name: document.getElementById('lectFirstName').value,
+        last_name: document.getElementById('lectLastName').value,
+        department_code: document.getElementById('lectDept').value,
+        password: document.getElementById('lectPword').value
+      };
+
+      const result = await submitFormData('add_lecturer', formData);
+
+      if (result.success) {
+        showMessage('lecturer-message', result.message, true);
+        this.reset();
+        // Refresh the lecturers table
+        const data = await fetchData('get_lecturers');
+        if (data && data.lecturers) {
+          populateLecturers(data.lecturers);
+        }
+      } else {
+        showMessage('lecturer-message', 'Error: ' + result.message, false);
+      }
+    });
+
+    // Course form submission
+    document.getElementById('course-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const formData = {
+        course_code: document.getElementById('courseCode').value,
+        course_title: document.getElementById('courseTitle').value,
+        credit_units: document.getElementById('courseUnits').value,
+        department_code: document.getElementById('courseDept').value,
+        lecturer_name: document.getElementById('courseLecturer').value
+      };
+
+      const result = await submitFormData('add_course', formData);
+
+      if (result.success) {
+        showMessage('course-message', result.message, true);
+        this.reset();
+        // Refresh the courses table
+        const data = await fetchData('get_courses');
+        if (data && data.courses) {
+          populateCourses(data.courses);
+        }
+      } else {
+        showMessage('course-message', 'Error: ' + result.message, false);
+      }
     });
   </script>
 </body>
