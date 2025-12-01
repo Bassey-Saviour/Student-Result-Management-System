@@ -22,6 +22,9 @@
     <form id="student-form" aria-label="Student Result Form" class="form-card">
       <label for="matricNo">Matriculation Number:</label>
       <input type="text" id="matricNo" name="matricNo" placeholder="Enter your matric number" required />
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password" required />
+      <div id="error-message" class="error-message" style="display: none;"></div>
       <button type="submit" class="btn">View Results</button>
     </form>
     <section id="results-section" class="results-section hidden">
@@ -52,21 +55,35 @@
     const resultsSection = document.getElementById('results-section');
     const tbody = document.getElementById('results-table-body');
     const gpaEl = document.getElementById('gpa-value');
+    const errorMessage = document.getElementById('error-message');
 
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
       const matric = document.getElementById('matricNo').value.trim();
-      if (!matric) return;
+      const password = document.getElementById('password').value;
+      if (!matric || !password) return;
+
+      // Clear previous errors
+      errorMessage.style.display = 'none';
+      errorMessage.textContent = '';
 
       try {
-        const resp = await fetch('/cgi-bin/student_results.py?matricNo=' + encodeURIComponent(matric), {
-          method: 'GET',
-          credentials: 'same-origin'
+        const params = new URLSearchParams({
+          matricNo: matric,
+          password: password
+        });
+        const resp = await fetch('/cgi-bin/student_results.py', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params.toString()
         });
         if (!resp.ok) throw new Error('Network response was not ok');
         const data = await resp.json();
         if (data.error) {
-          alert('Error: ' + data.error);
+          errorMessage.textContent = 'Error: ' + data.error;
+          errorMessage.style.display = 'block';
+          resultsSection.classList.add('hidden');
           return;
         }
 
@@ -91,7 +108,8 @@
         }
         resultsSection.classList.remove('hidden');
       } catch (err) {
-        alert('Failed to load results: ' + err.message);
+        errorMessage.textContent = 'Failed to load results: ' + err.message;
+        errorMessage.style.display = 'block';
       }
     });
   </script>

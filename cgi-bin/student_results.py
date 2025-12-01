@@ -2,6 +2,7 @@
 import cgi
 import cgitb
 import json
+import bcrypt
 from db_config import get_connection
 
 cgitb.enable()
@@ -25,26 +26,47 @@ def grade_points(grade):
 def main():
     form = cgi.FieldStorage()
     matric = form.getfirst('matricNo') or form.getfirst('matric_no') or ''
+    password = form.getfirst('password') or ''
 
     print("Content-Type: application/json")
     print()
 
-    if not matric:
-        print(json.dumps({"error": "missing matricNo"}))
+    if not matric or not password:
+        print(json.dumps({"error": "missing matricNo or password"}))
         return
 
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
+        
+        # Authenticate student
+        cursor.execute("SELECT student_id, password FROM student WHERE matric_no = %s", (matric,))
+        student_row = cursor.fetchone()
+        if not student_row:
+            print(json.dumps({"error": "Student not found"}))
+            return
+        
+        # Verify password
+        stored_hash = student_row['password'].encode('utf-8')
+        try:
+            if not bcrypt.checkpw(password.encode('utf-8'), stored_hash):
+                print(json.dumps({"error": "Invalid password"}))
+                return
+        except Exception as e:
+            print(json.dumps({"error": "Authentication failed"}))
+            return
+        
+        student_id = student_row['student_id']
+        
+        # Fetch results
         query = (
             "SELECT c.course_code, c.course_title, c.credit_units, r.score, r.grade "
-            "FROM student s "
-            "JOIN result r ON s.student_id = r.student_id "
+            "FROM result r "
             "JOIN course c ON r.course_id = c.course_id "
-            "WHERE s.matric_no = %s "
+            "WHERE r.student_id = %s "
             "ORDER BY c.course_code"
         )
-        cursor.execute(query, (matric,))
+        cursor.execute(query, (student_id,))
         rows = cursor.fetchall()
     except Exception as e:
         print(json.dumps({"error": str(e)}))
