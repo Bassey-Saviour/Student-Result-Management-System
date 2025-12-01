@@ -35,7 +35,7 @@ CREATE TABLE `course` (
   KEY `lecturer_id_idx` (`lecturer_id`),
   CONSTRAINT `cour - dpt FK_department_id` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`),
   CONSTRAINT `cour - lec FK_lecturer_id` FOREIGN KEY (`lecturer_id`) REFERENCES `lecturer` (`lecturer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
-INSERT INTO `course` VALUES (1,'CSC401','Artificial Intelligence',3,1,1),(2,'CSC402','Data Structures',3,1,4),(3,'CIS401','Cybersecurity Principles',3,2,2),(4,'CIS402','Cloud Computing',2,2,3);
+INSERT INTO `course` VALUES (1,'CSC401','Artificial Intelligence',3,1,1),(2,'CSC402','Data Structures',3,1,4),(3,'CIS401','Cybersecurity Principles',3,2,2),(4,'CIS402','Cloud Computing',2,2,3),(5,'CSC403','Numerical Analysis',3,1,1);
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,7 +91,7 @@ CREATE TABLE `lecturer` (
   UNIQUE KEY `email_UNIQUE` (`email`),
   KEY `department_id_idx` (`department_id`),
   CONSTRAINT `lec - dept FK_department_id` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,7 +100,7 @@ CREATE TABLE `lecturer` (
 
 LOCK TABLES `lecturer` WRITE;
 /*!40000 ALTER TABLE `lecturer` DISABLE KEYS */;
-INSERT INTO `lecturer` VALUES (1,'Seun','Okafor','seun.okafor@school.edu',1,'$2b$12$ZwN8BWZNteOMFnJwtiBfYOZOzx8yQlV8soVhEpnQzfeVYtgInWQZO'),(2,'Dondada','Alfred','donda.alfred@school.edu',2,'$2b$12$SnwAUX4yZFizGO.vGc0Xce14Sc2xJzggzaBZ1vV//T5o.lCaBkQ/y'),(3,'Amina','Bello','amina.bello@school.edu',2,'$2b$12$FOvqSitpWJhvgDkw61FlsefsczxrnCa7JMdbcxs6Hu9SjbwSOKfhG'),(4,'Famudims','Ayankoo','famudims.aya@school.edu',1,'$2b$12$LmlqurqRa5NV1aiB8bMBr.tp74L.a4swJQoH0mfFS5LU2Ao7ZAMce');
+INSERT INTO `lecturer` VALUES (1,'Seun','Okafor','seun.okafor@school.edu',1,'$2b$12$ZwN8BWZNteOMFnJwtiBfYOZOzx8yQlV8soVhEpnQzfeVYtgInWQZO'),(2,'Dondada','Alfred','donda.alfred@school.edu',2,'$2b$12$SnwAUX4yZFizGO.vGc0Xce14Sc2xJzggzaBZ1vV//T5o.lCaBkQ/y'),(3,'Amina','Bello','amina.bello@school.edu',2,'$2b$12$FOvqSitpWJhvgDkw61FlsefsczxrnCa7JMdbcxs6Hu9SjbwSOKfhG'),(4,'Famudims','Ayankoo','famudims.aya@school.edu',1,'$2b$12$LmlqurqRa5NV1aiB8bMBr.tp74L.a4swJQoH0mfFS5LU2Ao7ZAMce'),(5,'Ajayi','Fred','ajayi.fred@school.edu',1,'$2b$12$yUMfKigd8a2BdzRArrqGr.DnzxNYOPb4aMMOnq5BZlsucOiRSTfAu');
 /*!40000 ALTER TABLE `lecturer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -123,7 +123,7 @@ CREATE TABLE `result` (
   KEY `course_id_idx` (`course_id`),
   CONSTRAINT `res - cour FK_course_id` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`),
   CONSTRAINT `res - std FK_student_id` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -132,7 +132,7 @@ CREATE TABLE `result` (
 
 LOCK TABLES `result` WRITE;
 /*!40000 ALTER TABLE `result` DISABLE KEYS */;
-INSERT INTO `result` VALUES (1,1,1,85,'A'),(2,1,2,78,'B'),(3,2,1,73,'B'),(4,2,2,80,'A'),(5,3,1,81,'A'),(6,3,2,80,'A'),(7,4,3,39,'F'),(8,4,4,75,'B'),(9,5,3,30,'F'),(10,5,4,60,'B');
+INSERT INTO `result` VALUES (1,1,1,89,'A'),(2,1,2,78,'B'),(3,2,1,73,'B'),(4,2,2,80,'A'),(5,3,1,81,'A'),(6,3,2,80,'A'),(7,4,3,39,'F'),(8,4,4,75,'B'),(9,5,3,30,'F'),(10,5,4,60,'B');
 /*!40000 ALTER TABLE `result` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,7 +157,7 @@ CREATE TABLE `student` (
   UNIQUE KEY `email_UNIQUE` (`email`),
   KEY `department_id_idx` (`department_id`),
   CONSTRAINT `dept - st FK_department_id` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -166,7 +166,7 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES (1,'22/0001','Saviour','Bassey','saviour@student.edu',400,1,'$2b$12$JvDgd7clF4zykpf9APYuAOdt7xZ5v3N36/QWccjieQvFXgq6WAEsO'),(2,'22/0002','Sophia','Odiase','sophia@student.edu',400,1,'$2b$12$nH5Ock.KnhMQeQFXvrAon.fQcPPu4Axfi2VOBnRTYLbNjdMtgwOBa'),(3,'22/0003','Prince','Nnamani','prince@student.edu',400,1,'$2b$12$Q/euhkyYepJzxHN00JZKJutZjthwSDj85wqmTaFcYXij8qzvNhWWS'),(4,'22/0004','Paul','Koroye','paul@student.edu',400,2,'$2b$12$9xENgh34B6.5LESn3t2hNOLi1vN1Zp5l19vmbPwuMviyHKRG6lTpy'),(5,'22/0010','Adeola','Shinaayomi','adeola@student.edu',400,2,'$2b$12$jlva9VMb9JL0XtkLTMOnbuS/fx3bPiBb.HYT5LTZGrap1K6wVuvuu');
+INSERT INTO `student` VALUES (1,'22/0001','Saviour','Bassey','saviour@student.edu',400,1,'$2b$12$JvDgd7clF4zykpf9APYuAOdt7xZ5v3N36/QWccjieQvFXgq6WAEsO'),(2,'22/0002','Sophia','Odiase','sophia@student.edu',400,1,'$2b$12$nH5Ock.KnhMQeQFXvrAon.fQcPPu4Axfi2VOBnRTYLbNjdMtgwOBa'),(3,'22/0003','Prince','Nnamani','prince@student.edu',400,1,'$2b$12$Q/euhkyYepJzxHN00JZKJutZjthwSDj85wqmTaFcYXij8qzvNhWWS'),(4,'22/0004','Paul','Koroye','paul@student.edu',400,2,'$2b$12$9xENgh34B6.5LESn3t2hNOLi1vN1Zp5l19vmbPwuMviyHKRG6lTpy'),(5,'22/0010','Adeola','Shinaayomi','adeola@student.edu',400,2,'$2b$12$jlva9VMb9JL0XtkLTMOnbuS/fx3bPiBb.HYT5LTZGrap1K6wVuvuu'),(6,'22/0005','Iteoluwakiishi','Oludemi','ite@student.edu',400,2,'$2b$12$LQojBRt7PW2qB2st64boJe17CMauo1hwQHQ5I1FRXKvQA.XDSIXIe');
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -179,4 +179,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-27 10:29:16
+-- Dump completed on 2025-12-01 18:24:38
