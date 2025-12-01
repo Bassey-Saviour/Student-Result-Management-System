@@ -29,7 +29,7 @@
     </div>
 
     <section id="students" role="tabpanel" aria-labelledby="tab-students" class="tabpanel active">
-      <h3>Manage Students</h3>
+      <h3 class="header">Manage Students</h3>
       <div id="students-loading">Loading students...</div>
       <table aria-label="Students Table" id="students-table" style="display:none;">
         <thead>
@@ -46,6 +46,7 @@
         </tbody>
       </table>
       <form id="student-form" aria-label="Add/Edit Student" class="form-card">
+        <h3 class="form-header">Add Student</h3>
         <label for="studMatric">Matric Number:</label>
         <input type="text" id="studMatric" name="studMatric" placeholder="e.g., 22/0006" required />
         <label for="studFirstName">First Name:</label>
@@ -71,7 +72,7 @@
     </section>
 
     <section id="lecturers" role="tabpanel" aria-labelledby="tab-lecturers" class="tabpanel">
-      <h3>Manage Lecturers</h3>
+      <h3 class="header">Manage Lecturers</h3>
       <div id="lecturers-loading">Loading lecturers...</div>
       <table aria-label="Lecturers Table" id="lecturers-table" style="display:none;">
         <thead>
@@ -87,6 +88,7 @@
         </tbody>
       </table>
       <form id="lecturer-form" aria-label="Add/Edit Lecturer" class="form-card">
+        <h3 class="form-header">Add Lecturer</h3>
         <label for="lectEmail">Email:</label>
         <input type="email" id="lectEmail" name="lectEmail" placeholder="lecturer@school.edu" required />
         <label for="lectFirstName">First Name:</label>
@@ -108,7 +110,7 @@
     </section>
 
     <section id="courses" role="tabpanel" aria-labelledby="tab-courses" class="tabpanel">
-      <h3>Manage Courses</h3>
+      <h3 class="header">Manage Courses</h3>
       <div id="courses-loading">Loading courses...</div>
       <table aria-label="Courses Table" id="courses-table" style="display:none;">
         <thead>
@@ -125,6 +127,7 @@
         </tbody>
       </table>
       <form id="course-form" aria-label="Add/Edit Course" class="form-card">
+        <h3 class="form-header">Add Course</h3>
         <label for="courseCode">Course Code:</label>
         <input type="text" id="courseCode" name="courseCode" placeholder="e.g., CSC403" required />
         <label for="courseTitle">Course Title:</label>
@@ -145,7 +148,7 @@
     </section>
   </main>
   <footer>
-    &copy; 2024 SRMS Frontend. All rights reserved.
+    &copy; 2025 SRMS Frontend. All rights reserved.
   </footer>
   <script>
     // Configuration
