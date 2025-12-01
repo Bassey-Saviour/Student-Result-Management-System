@@ -271,6 +271,7 @@ footer {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	max-width: 400px;
 	margin: auto;
+	min-width: 400px;
 }
 
 /* Upload status styling */
@@ -294,6 +295,39 @@ footer {
 	margin-bottom: 1rem;
 	font-weight: 600;
 	display: none;
+}
+
+/* Score input styling in table */
+input[type="number"].score-input {
+	width: 100%;
+	padding: 0.5rem;
+	border: 1.5px solid #ddd;
+	border-radius: 5px;
+	font-size: 1rem;
+	transition: border-color 0.3s ease;
+}
+
+input[type="number"].score-input:focus {
+	border-color: #4a90e2;
+	outline: none;
+}
+
+/* Students table section */
+#students-table-section {
+	background: white;
+	padding: 1.5rem;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	margin-top: 1.5rem;
+}
+
+#students-table-section h3 {
+	margin: 1rem;
+	color: #2a64c7;
+}
+
+#submit-scores-btn {
+	margin-top: 1rem;
 }
 
 /* Admin Tabs */

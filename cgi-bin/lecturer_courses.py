@@ -2,45 +2,54 @@
 import cgi
 import cgitb
 import json
+import bcrypt
 from db_config import get_connection
 
 cgitb.enable()
 
 def main():
     form = cgi.FieldStorage()
-    lecturer_id = form.getfirst('lecturer_id') or ''
-    lecturer_email = form.getfirst('lecturer_email') or ''
+    username = form.getfirst('username') or ''
+    password = form.getfirst('password') or ''
 
     print("Content-Type: application/json")
     print()
 
-    if not lecturer_id and not lecturer_email:
-        print(json.dumps({"error": "missing lecturer_id or lecturer_email"}))
+    if not username or not password:
+        print(json.dumps({"error": "missing username or password"}))
         return
 
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
         
-        # Fetch courses for the lecturer
-        if lecturer_id:
-            query = (
-                "SELECT c.course_id, c.course_code, c.course_title, c.credit_units "
-                "FROM course c "
-                "WHERE c.lecturer_id = %s "
-                "ORDER BY c.course_code"
-            )
-            cursor.execute(query, (int(lecturer_id),))
-        else:
-            query = (
-                "SELECT c.course_id, c.course_code, c.course_title, c.credit_units "
-                "FROM course c "
-                "JOIN lecturer l ON c.lecturer_id = l.lecturer_id "
-                "WHERE l.email = %s "
-                "ORDER BY c.course_code"
-            )
-            cursor.execute(query, (lecturer_email,))
+        # Authenticate lecturer
+        cursor.execute("SELECT lecturer_id, password FROM lecturer WHERE first_name = %s", (username,))
+        lecturer_row = cursor.fetchone()
+        if not lecturer_row:
+            print(json.dumps({"error": "Username not found"}))
+            return
         
+        # Verify password
+        stored_hash = lecturer_row['password'].encode('utf-8')
+        try:
+            if not bcrypt.checkpw(password.encode('utf-8'), stored_hash):
+                print(json.dumps({"error": "Invalid password"}))
+                return
+        except Exception as e:
+            print(json.dumps({"error": "Authentication failed"}))
+            return
+        
+        lecturer_id = lecturer_row['lecturer_id']
+        
+        # Fetch courses for the lecturer
+        query = (
+            "SELECT c.course_id, c.course_code, c.course_title, c.credit_units "
+            "FROM course c "
+            "WHERE c.lecturer_id = %s "
+            "ORDER BY c.course_code"
+        )
+        cursor.execute(query, (lecturer_id,))
         rows = cursor.fetchall()
         
     except Exception as e:
@@ -63,8 +72,7 @@ def main():
         })
 
     payload = {
-        'lecturer_id': lecturer_id if lecturer_id else None,
-        'lecturer_email': lecturer_email if lecturer_email else None,
+        'lecturer_id': lecturer_id,
         'courses': courses,
         'count': len(courses)
     }
