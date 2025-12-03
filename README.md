@@ -149,6 +149,11 @@ http://localhost:8000/public/index.html
 - **Username**: `Ajayi` (first name)
 - **Password**: lect127
 
+### Admin
+
+- **Username**: `admin1`
+- **Password**: `mypassword`
+
 ### Sample Data
 
 The SQL file includes sample students, lecturers, courses, and results for testing.

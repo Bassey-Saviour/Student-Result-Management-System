@@ -19,6 +19,21 @@
     <a href="lecturer.html" class="nav-link">Lecturer View</a>
   </nav>
   <main class="container">
+    <!-- Admin Login Section -->
+    <section id="admin-login" class="form-card">
+      <h3>Admin Login</h3>
+      <form id="admin-login-form" aria-label="Admin Login Form">
+        <label for="adminUsername">Username:</label>
+        <input type="text" id="adminUsername" name="adminUsername" placeholder="Enter admin username" required />
+        <label for="adminPassword">Password:</label>
+        <input type="password" id="adminPassword" name="adminPassword" placeholder="Enter password" required />
+        <div id="admin-login-error" class="error-message" style="display: none;"></div>
+        <button type="submit" class="btn">Login</button>
+      </form>
+    </section>
+
+    <!-- Dashboard Section (hidden until login) -->
+    <section id="admin-dashboard" class="hidden">
     <h2 class="text-center mb-1">Management Dashboard</h2>
 
     <div role="tablist" aria-label="Admin Management Tabs" class="tablist">
@@ -78,9 +93,9 @@
       <table aria-label="Lecturers Table" id="lecturers-table" style="display:none;">
         <thead>
           <tr>
-            <th>Email</th>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>Email</th>
             <th>Department</th>
           </tr>
         </thead>
@@ -147,6 +162,7 @@
         <div id="course-message" style="margin-top: 10px; display: none;"></div>
       </form>
     </section>
+    </section> <!-- End admin-dashboard -->
   </main>
   <footer>
     &copy; 2025 SRMS Frontend. All rights reserved.
@@ -155,6 +171,57 @@
     // Configuration
     const CGI_SCRIPT_URL = '/cgi-bin/get_all_data.py';
     const CGI_SCRIPT_URL2 = '/cgi-bin/add_data.py';
+    
+    // Admin authentication
+    const adminLoginForm = document.getElementById('admin-login-form');
+    const adminLoginSection = document.getElementById('admin-login');
+    const adminDashboard = document.getElementById('admin-dashboard');
+    const adminLoginError = document.getElementById('admin-login-error');
+
+    adminLoginForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const username = document.getElementById('adminUsername').value.trim();
+      const password = document.getElementById('adminPassword').value;
+      if (!username || !password) return;
+
+      // Clear previous errors
+      adminLoginError.style.display = 'none';
+      adminLoginError.textContent = '';
+
+      try {
+        const params = new URLSearchParams({
+          username: username,
+          password: password
+        });
+
+        const resp = await fetch('/cgi-bin/admin_login.py', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params.toString()
+        });
+
+        if (!resp.ok) throw new Error('Network response was not ok');
+        const data = await resp.json();
+
+        if (data.error) {
+          adminLoginError.textContent = 'Error: ' + data.error;
+          adminLoginError.style.display = 'block';
+          return;
+        }
+
+        // Login successful
+        adminLoginSection.style.display = 'none';
+        adminDashboard.classList.remove('hidden');
+        
+        // Load all data
+        loadAllData();
+      } catch (err) {
+        adminLoginError.textContent = 'Failed to login: ' + err.message;
+        adminLoginError.style.display = 'block';
+      }
+    });
+
     // Tab switching logic
     const tabs = document.querySelectorAll('[role="tab"]');
     const tabContents = document.querySelectorAll('[role="tabpanel"]');
@@ -248,9 +315,9 @@
       lecturers.forEach(lecturer => {
         const row = tbody.insertRow();
         row.innerHTML = `
-          <td>${lecturer.email}</td>
-          <td>${lecturer.first_name}</td>
+        <td>${lecturer.first_name}</td>
           <td>${lecturer.last_name}</td>
+        <td>${lecturer.email}</td>
           <td>${lecturer.department_code}</td>
         `;
       });
@@ -307,8 +374,7 @@
       }
     }
 
-    // Load data when page loads
-    window.addEventListener('DOMContentLoaded', loadAllData);
+    // Note: Data is now loaded after admin login, not on page load
 
     // Function to submit form data
     async function submitFormData(action, formData) {
