@@ -1,5 +1,5 @@
 # Database configuration (contains credentials)
-cgi-bin/db_config.py
+cgi-bin/db_configg.py
 
 # Python cache
 __pycache__/
