@@ -107,6 +107,51 @@
 		}
 	}
 
+	// Modal confirmation helper
+	function showConfirmModal(title, message) {
+		return new Promise((resolve) => {
+			const overlay = document.createElement("div");
+			overlay.className = "modal-overlay";
+			overlay.innerHTML = `
+	        <div class="modal-card" role="dialog" aria-modal="true" aria-label="${title}">
+	          <h3>${title}</h3>
+	          <p>${message}</p>
+	          <div class="modal-actions">
+	            <button type="button" class="btn-secondary" data-action="cancel">Cancel</button>
+	            <button type="button" class="btn-primary" data-action="confirm">Delete</button>
+	          </div>
+	        </div>
+	      `;
+
+			document.body.appendChild(overlay);
+
+			const cleanup = () => {
+				overlay.remove();
+			};
+
+			overlay.addEventListener("click", (e) => {
+				if (e.target === overlay) {
+					cleanup();
+					resolve(false);
+				}
+			});
+
+			overlay
+				.querySelector('[data-action="cancel"]')
+				.addEventListener("click", () => {
+					cleanup();
+					resolve(false);
+				});
+
+			overlay
+				.querySelector('[data-action="confirm"]')
+				.addEventListener("click", () => {
+					cleanup();
+					resolve(true);
+				});
+		});
+	}
+
 	// Function to populate students table
 	function populateStudents(students) {
 		const tbody = document.getElementById("students-tbody");
@@ -127,7 +172,18 @@
         <td>${student.last_name}</td>
         <td>${student.email}</td>
         <td>${student.department_code}</td>
+        <td>
+          <button class="btn-delete" data-type="student" data-id="${student.student_id}" data-name="${student.first_name} ${student.last_name}">
+            <img src="/images/icons8-delete.svg"/>
+          </button>
+        </td>
       `;
+		});
+
+		// Add delete event listeners
+		const deleteButtons = tbody.querySelectorAll(".btn-delete");
+		deleteButtons.forEach((btn) => {
+			btn.addEventListener("click", handleDelete);
 		});
 
 		loading.style.display = "none";
@@ -153,7 +209,18 @@
         <td>${lecturer.last_name}</td>
       <td>${lecturer.email}</td>
         <td>${lecturer.department_code}</td>
+        <td>
+          <button class="btn-delete" data-type="lecturer" data-id="${lecturer.lecturer_id}" data-name="${lecturer.first_name} ${lecturer.last_name}">
+            <img src="/images/icons8-delete.svg"/>
+          </button>
+        </td>
       `;
+		});
+
+		// Add delete event listeners
+		const deleteButtons = tbody.querySelectorAll(".btn-delete");
+		deleteButtons.forEach((btn) => {
+			btn.addEventListener("click", handleDelete);
 		});
 
 		loading.style.display = "none";
@@ -180,7 +247,18 @@
         <td>${course.credit_units}</td>
         <td>${course.department_code}</td>
         <td>${course.lecturer_name}</td>
+        <td>
+          <button class="btn-delete" data-type="course" data-id="${course.course_id}" data-name="${course.course_code}">
+            <img src="/images/icons8-delete.svg"/>
+          </button>
+        </td>
       `;
+		});
+
+		// Add delete event listeners
+		const deleteButtons = tbody.querySelectorAll(".btn-delete");
+		deleteButtons.forEach((btn) => {
+			btn.addEventListener("click", handleDelete);
 		});
 
 		loading.style.display = "none";
@@ -341,4 +419,61 @@
 				showMessage("course-message", "Error: " + result.message, false);
 			}
 		});
+
+	// Handle delete button clicks
+	async function handleDelete(event) {
+		const button = event.currentTarget || event.target;
+		const entityType = button.dataset.type;
+		const entityId = button.dataset.id;
+		const entityName = button.dataset.name;
+
+		// Confirm deletion using modal
+		const confirmed = await showConfirmModal(
+			"Confirm delete",
+			`Are you sure you want to delete ${entityType} "${entityName}"? This action cannot be undone.`
+		);
+
+		if (!confirmed) return;
+
+		try {
+			const response = await fetch("/api/delete_data", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					type: entityType,
+					id: entityId,
+				}),
+			});
+
+			const result = await response.json();
+
+			if (result.success) {
+				alert(result.message);
+				// Refresh the appropriate table
+				if (entityType === "student") {
+					const data = await fetchData("get_students");
+					if (data && data.students) {
+						populateStudents(data.students);
+					}
+				} else if (entityType === "lecturer") {
+					const data = await fetchData("get_lecturers");
+					if (data && data.lecturers) {
+						populateLecturers(data.lecturers);
+					}
+				} else if (entityType === "course") {
+					const data = await fetchData("get_courses");
+					if (data && data.courses) {
+						populateCourses(data.courses);
+					}
+				}
+			} else {
+				alert("Error: " + result.error);
+			}
+		} catch (error) {
+			console.error("Delete error:", error);
+			alert("Failed to delete: " + error.message);
+		}
+	}
 })();

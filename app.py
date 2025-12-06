@@ -705,6 +705,62 @@ def add_course(data):
         except:
             pass
 
+# Delete Data API (Admin)
+@app.route('/api/delete_data', methods=['POST', 'DELETE'])
+def delete_data():
+    """Delete a student, lecturer, or course"""
+    data = request.get_json() if request.is_json else request.form
+    entity_type = data.get('type', '')
+    entity_id = data.get('id', '')
+    
+    if not entity_type or not entity_id:
+        return jsonify({"error": "Missing type or id"}), 400
+    
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        
+        if entity_type == 'student':
+            # Delete student's results first (foreign key constraint)
+            cursor.execute("DELETE FROM result WHERE student_id = %s", (entity_id,))
+            # Delete student
+            cursor.execute("DELETE FROM student WHERE student_id = %s", (entity_id,))
+            
+        elif entity_type == 'lecturer':
+            # Check if lecturer has courses assigned
+            cursor.execute("SELECT COUNT(*) FROM course WHERE lecturer_id = %s", (entity_id,))
+            count = cursor.fetchone()[0]
+            if count > 0:
+                return jsonify({"error": "Cannot delete lecturer with assigned courses. Reassign courses first."}), 400
+            # Delete lecturer
+            cursor.execute("DELETE FROM lecturer WHERE lecturer_id = %s", (entity_id,))
+            
+        elif entity_type == 'course':
+            # Delete course results first (foreign key constraint)
+            cursor.execute("DELETE FROM result WHERE course_id = %s", (entity_id,))
+            # Delete course
+            cursor.execute("DELETE FROM course WHERE course_id = %s", (entity_id,))
+            
+        else:
+            return jsonify({"error": "Invalid entity type"}), 400
+        
+        conn.commit()
+        
+        return jsonify({
+            "success": True,
+            "message": f"{entity_type.capitalize()} deleted successfully"
+        })
+        
+    except Exception as e:
+        log_error(f"delete_data error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+    finally:
+        try:
+            cursor.close()
+            conn.close()
+        except Exception:
+            pass
+
 if __name__ == '__main__':
     # Run the Flask development server
     app.run(host='0.0.0.0', port=5000, debug=True)
