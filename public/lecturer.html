@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/public/css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css">
   <link rel="icon" type="image/png" href="images/results-icon-png-17974-removebg-preview.png">
   <title>Lecturer View - SRMS</title>
 </head>
@@ -113,16 +113,14 @@
       loginError.textContent = '';
 
       try {
-        const params = new URLSearchParams({
-          username: username,
-          password: password
-        });
-
-        const resp = await fetch('/cgi-bin/lecturer_courses.py', {
+        const resp = await fetch('/api/lecturer_courses', {
           method: 'POST',
           credentials: 'same-origin',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: params.toString()
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: username,
+            password: password
+          })
         });
         if (!resp.ok) throw new Error('Network response was not ok');
         const data = await resp.json();
@@ -168,7 +166,7 @@
       uploadError.textContent = '';
 
       try {
-        const resp = await fetch('/cgi-bin/get_course_students.py?course_id=' + encodeURIComponent(courseId), {
+        const resp = await fetch('/api/get_course_students?course_id=' + encodeURIComponent(courseId), {
           method: 'GET',
           credentials: 'same-origin'
         });
@@ -276,17 +274,15 @@
       try {
         // Submit each score
         for (const update of updates) {
-          const params = new URLSearchParams({
-            course_id: update.course_id,
-            student_id: update.student_id,
-            score: update.score
-          });
-
-          const resp = await fetch('/cgi-bin/upload_results_by_student.py', {
+          const resp = await fetch('/api/upload_results', {
             method: 'POST',
             credentials: 'same-origin',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: params.toString()
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              course_id: courseId,
+              student_id: update.student_id,
+              score: update.score
+            })
           });
 
           if (!resp.ok) throw new Error('Failed to upload result');

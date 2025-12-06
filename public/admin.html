@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" type="image/png" href="images/results-icon-png-17974-removebg-preview.png">
-  <link rel="stylesheet" href="/public/css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css">
   <title>Admin View - SRMS</title>
 </head>
 
@@ -34,134 +34,134 @@
 
     <!-- Dashboard Section (hidden until login) -->
     <section id="admin-dashboard" class="hidden">
-    <h2 class="text-center mb-1">Management Dashboard</h2>
+      <h2 class="text-center mb-1">Management Dashboard</h2>
 
-    <div role="tablist" aria-label="Admin Management Tabs" class="tablist">
-      <button id="tab-students" role="tab" aria-selected="true" aria-controls="students"
-        class="tab active">Students</button>
-      <button id="tab-lecturers" role="tab" aria-selected="false" aria-controls="lecturers"
-        class="tab">Lecturers</button>
-      <button id="tab-courses" role="tab" aria-selected="false" aria-controls="courses" class="tab">Courses</button>
-    </div>
+      <div role="tablist" aria-label="Admin Management Tabs" class="tablist">
+        <button id="tab-students" role="tab" aria-selected="true" aria-controls="students"
+          class="tab active">Students</button>
+        <button id="tab-lecturers" role="tab" aria-selected="false" aria-controls="lecturers"
+          class="tab">Lecturers</button>
+        <button id="tab-courses" role="tab" aria-selected="false" aria-controls="courses" class="tab">Courses</button>
+      </div>
 
-    <section id="students" role="tabpanel" aria-labelledby="tab-students" class="tabpanel active">
-      <h3 class="header">Manage Students</h3>
-      <div id="students-loading">Loading students...</div>
-      <table aria-label="Students Table" id="students-table" style="display:none;">
-        <thead>
-          <tr>
-            <th>Matric No</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Department</th>
-          </tr>
-        </thead>
-        <tbody id="students-tbody">
-          <!-- Student data will be populated here -->
-        </tbody>
-      </table>
-      <form id="student-form" aria-label="Add/Edit Student" class="form-card">
-        <h3 class="form-header">Add Student</h3>
-        <label for="studMatric">Matric Number:</label>
-        <input type="text" id="studMatric" name="studMatric" placeholder="e.g., 22/0006" required />
-        <label for="studFirstName">First Name:</label>
-        <input type="text" id="studFirstName" name="studFirstName" required />
-        <label for="studLastName">Last Name:</label>
-        <input type="text" id="studLastName" name="studLastName" required />
-        <label for="studEmail">Email:</label>
-        <input type="email" id="studEmail" name="studEmail" placeholder="student@student.edu" required />
-        <label for="studLevel">Level:</label>
-        <input type="number" id="studLevel" name="studLevel" value="400" min="100" max="500" step="100" required />
-        <label for="studDept">Department:</label>
-        <select id="studDept" name="studDept" required>
-          <option value="">Select department</option>
-          <option value="CSC">CS</option>
-          <option value="CIS">CIS</option>
-        </select>
-        <label for="studPword">Default Password</label>
-        <input type="password" name="studPword" id="studPword" required />
-        <button type="submit" class="btn">Add Student</button>
-        <div id="student-message" style="margin-top: 10px; display: none;"></div>
-      </form>
-      <hr />
-    </section>
+      <section id="students" role="tabpanel" aria-labelledby="tab-students" class="tabpanel active">
+        <h3 class="header">Manage Students</h3>
+        <div id="students-loading">Loading students...</div>
+        <table aria-label="Students Table" id="students-table" style="display:none;">
+          <thead>
+            <tr>
+              <th>Matric No</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Department</th>
+            </tr>
+          </thead>
+          <tbody id="students-tbody">
+            <!-- Student data will be populated here -->
+          </tbody>
+        </table>
+        <form id="student-form" aria-label="Add/Edit Student" class="form-card">
+          <h3 class="form-header">Add Student</h3>
+          <label for="studMatric">Matric Number:</label>
+          <input type="text" id="studMatric" name="studMatric" placeholder="e.g., 22/0006" required />
+          <label for="studFirstName">First Name:</label>
+          <input type="text" id="studFirstName" name="studFirstName" required />
+          <label for="studLastName">Last Name:</label>
+          <input type="text" id="studLastName" name="studLastName" required />
+          <label for="studEmail">Email:</label>
+          <input type="email" id="studEmail" name="studEmail" placeholder="student@student.edu" required />
+          <label for="studLevel">Level:</label>
+          <input type="number" id="studLevel" name="studLevel" value="400" min="100" max="500" step="100" required />
+          <label for="studDept">Department:</label>
+          <select id="studDept" name="studDept" required>
+            <option value="">Select department</option>
+            <option value="CSC">CS</option>
+            <option value="CIS">CIS</option>
+          </select>
+          <label for="studPword">Default Password</label>
+          <input type="password" name="studPword" id="studPword" required />
+          <button type="submit" class="btn">Add Student</button>
+          <div id="student-message" style="margin-top: 10px; display: none;"></div>
+        </form>
+        <hr />
+      </section>
 
-    <section id="lecturers" role="tabpanel" aria-labelledby="tab-lecturers" class="tabpanel">
-      <h3 class="header">Manage Lecturers</h3>
-      <div id="lecturers-loading">Loading lecturers...</div>
-      <table aria-label="Lecturers Table" id="lecturers-table" style="display:none;">
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Department</th>
-          </tr>
-        </thead>
-        <tbody id="lecturers-tbody">
-          <!-- Lecturer data will be populated here -->
-        </tbody>
-      </table>
-      <form id="lecturer-form" aria-label="Add/Edit Lecturer" class="form-card">
-        <h3 class="form-header">Add Lecturer</h3>
-        <label for="lectEmail">Email:</label>
-        <input type="email" id="lectEmail" name="lectEmail" placeholder="lecturer@school.edu" required />
-        <label for="lectFirstName">First Name:</label>
-        <input type="text" id="lectFirstName" name="lectFirstName" required />
-        <label for="lectLastName">Last Name:</label>
-        <input type="text" id="lectLastName" name="lectLastName" required />
-        <label for="lectDept">Department:</label>
-        <select id="lectDept" name="lectDept" required>
-          <option value="">Select department</option>
-          <option value="CSC">CS</option>
-          <option value="CIS">CIS</option>
-        </select>
-        <label for="lectPword">Default Password</label>
-        <input type="password" id="lectPword" name="lectPword" required />
-        <button type="submit" class="btn">Add Lecturer</button>
-        <div id="lecturer-message" style="margin-top: 10px; display: none;"></div>
-      </form>
-      <hr />
-    </section>
+      <section id="lecturers" role="tabpanel" aria-labelledby="tab-lecturers" class="tabpanel">
+        <h3 class="header">Manage Lecturers</h3>
+        <div id="lecturers-loading">Loading lecturers...</div>
+        <table aria-label="Lecturers Table" id="lecturers-table" style="display:none;">
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Department</th>
+            </tr>
+          </thead>
+          <tbody id="lecturers-tbody">
+            <!-- Lecturer data will be populated here -->
+          </tbody>
+        </table>
+        <form id="lecturer-form" aria-label="Add/Edit Lecturer" class="form-card">
+          <h3 class="form-header">Add Lecturer</h3>
+          <label for="lectEmail">Email:</label>
+          <input type="email" id="lectEmail" name="lectEmail" placeholder="lecturer@school.edu" required />
+          <label for="lectFirstName">First Name:</label>
+          <input type="text" id="lectFirstName" name="lectFirstName" required />
+          <label for="lectLastName">Last Name:</label>
+          <input type="text" id="lectLastName" name="lectLastName" required />
+          <label for="lectDept">Department:</label>
+          <select id="lectDept" name="lectDept" required>
+            <option value="">Select department</option>
+            <option value="CSC">CS</option>
+            <option value="CIS">CIS</option>
+          </select>
+          <label for="lectPword">Default Password</label>
+          <input type="password" id="lectPword" name="lectPword" required />
+          <button type="submit" class="btn">Add Lecturer</button>
+          <div id="lecturer-message" style="margin-top: 10px; display: none;"></div>
+        </form>
+        <hr />
+      </section>
 
-    <section id="courses" role="tabpanel" aria-labelledby="tab-courses" class="tabpanel">
-      <h3 class="header">Manage Courses</h3>
-      <div id="courses-loading">Loading courses...</div>
-      <table aria-label="Courses Table" id="courses-table" style="display:none;">
-        <thead>
-          <tr>
-            <th>Course Code</th>
-            <th>Course Title</th>
-            <th>Units</th>
-            <th>Department</th>
-            <th>Lecturer</th>
-          </tr>
-        </thead>
-        <tbody id="courses-tbody">
-          <!-- Course data will be populated here -->
-        </tbody>
-      </table>
-      <form id="course-form" aria-label="Add/Edit Course" class="form-card">
-        <h3 class="form-header">Add Course</h3>
-        <label for="courseCode">Course Code:</label>
-        <input type="text" id="courseCode" name="courseCode" placeholder="e.g., CSC403" required />
-        <label for="courseTitle">Course Title:</label>
-        <input type="text" id="courseTitle" name="courseTitle" required />
-        <label for="courseUnits">Units:</label>
-        <input type="number" id="courseUnits" name="courseUnits" min="1" max="6" required />
-        <label for="courseDept">Department:</label>
-        <select id="courseDept" name="courseDept" required>
-          <option value="">Select department</option>
-          <option value="CSC">CS</option>
-          <option value="CIS">CIS</option>
-        </select>
-        <label for="courseLecturer">Lecturer Name:</label>
-        <input type="text" id="courseLecturer" name="courseLecturer" placeholder="Lecturer's first name" required />
-        <button type="submit" class="btn">Add Course</button>
-        <div id="course-message" style="margin-top: 10px; display: none;"></div>
-      </form>
-    </section>
+      <section id="courses" role="tabpanel" aria-labelledby="tab-courses" class="tabpanel">
+        <h3 class="header">Manage Courses</h3>
+        <div id="courses-loading">Loading courses...</div>
+        <table aria-label="Courses Table" id="courses-table" style="display:none;">
+          <thead>
+            <tr>
+              <th>Course Code</th>
+              <th>Course Title</th>
+              <th>Units</th>
+              <th>Department</th>
+              <th>Lecturer</th>
+            </tr>
+          </thead>
+          <tbody id="courses-tbody">
+            <!-- Course data will be populated here -->
+          </tbody>
+        </table>
+        <form id="course-form" aria-label="Add/Edit Course" class="form-card">
+          <h3 class="form-header">Add Course</h3>
+          <label for="courseCode">Course Code:</label>
+          <input type="text" id="courseCode" name="courseCode" placeholder="e.g., CSC403" required />
+          <label for="courseTitle">Course Title:</label>
+          <input type="text" id="courseTitle" name="courseTitle" required />
+          <label for="courseUnits">Units:</label>
+          <input type="number" id="courseUnits" name="courseUnits" min="1" max="6" required />
+          <label for="courseDept">Department:</label>
+          <select id="courseDept" name="courseDept" required>
+            <option value="">Select department</option>
+            <option value="CSC">CS</option>
+            <option value="CIS">CIS</option>
+          </select>
+          <label for="courseLecturer">Lecturer Name:</label>
+          <input type="text" id="courseLecturer" name="courseLecturer" placeholder="Lecturer's first name" required />
+          <button type="submit" class="btn">Add Course</button>
+          <div id="course-message" style="margin-top: 10px; display: none;"></div>
+        </form>
+      </section>
     </section> <!-- End admin-dashboard -->
   </main>
   <footer>
@@ -169,9 +169,9 @@
   </footer>
   <script>
     // Configuration
-    const CGI_SCRIPT_URL = '/cgi-bin/get_all_data.py';
-    const CGI_SCRIPT_URL2 = '/cgi-bin/add_data.py';
-    
+    const CGI_SCRIPT_URL = '/api/get_all_data';
+    const CGI_SCRIPT_URL2 = '/api/add_data';
+
     // Admin authentication
     const adminLoginForm = document.getElementById('admin-login-form');
     const adminLoginSection = document.getElementById('admin-login');
@@ -189,16 +189,14 @@
       adminLoginError.textContent = '';
 
       try {
-        const params = new URLSearchParams({
-          username: username,
-          password: password
-        });
-
-        const resp = await fetch('/cgi-bin/admin_login.py', {
+        const resp = await fetch('/api/admin_login', {
           method: 'POST',
           credentials: 'same-origin',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: params.toString()
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: username,
+            password: password
+          })
         });
 
         if (!resp.ok) throw new Error('Network response was not ok');
@@ -213,7 +211,7 @@
         // Login successful
         adminLoginSection.style.display = 'none';
         adminDashboard.classList.remove('hidden');
-        
+
         // Load all data
         loadAllData();
       } catch (err) {
@@ -380,18 +378,17 @@
     async function submitFormData(action, formData) {
       try {
         const params = new URLSearchParams();
-        params.append('action', action);
-
-        for (const [key, value] of Object.entries(formData)) {
-          params.append(key, value);
-        }
+        const payload = {
+          action: action,
+          ...formData
+        };
 
         const response = await fetch(CGI_SCRIPT_URL2, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
           },
-          body: params.toString()
+          body: JSON.stringify(payload)
         });
 
         if (!response.ok) {

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/public/css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css">
   <link rel="icon" type="image/png" href="images/results-icon-png-17974-removebg-preview.png">
   <title>Student View - SRMS</title>
 </head>
@@ -69,15 +69,14 @@
       errorMessage.textContent = '';
 
       try {
-        const params = new URLSearchParams({
-          matricNo: matric,
-          password: password
-        });
-        const resp = await fetch('/cgi-bin/student_results.py', {
+        const resp = await fetch('/api/student_results', {
           method: 'POST',
           credentials: 'same-origin',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: params.toString()
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            matricNo: matric,
+            password: password
+          })
         });
         if (!resp.ok) throw new Error('Network response was not ok');
         const data = await resp.json();

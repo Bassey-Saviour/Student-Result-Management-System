@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: srms-app
+    runtime: python3
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: DB_HOST
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        sync: false
+
+databases:
+  - name: srms-database
+    databaseName: srms_db
+    user: srms_user
+    version: "8"
+    plan: free
