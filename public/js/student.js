@@ -58,6 +58,8 @@
 				});
 				gpaEl.textContent = data.gpa !== null ? data.gpa : "-";
 			}
+			// Hide login form after successful authentication
+			form.style.display = "none";
 			resultsSection.classList.remove("hidden");
 		} catch (err) {
 			errorMessage.textContent = "Failed to load results: " + err.message;

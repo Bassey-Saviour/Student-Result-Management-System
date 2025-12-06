@@ -73,6 +73,7 @@
 				courseSelect.appendChild(option);
 			});
 
+			// Hide login form after successful authentication
 			document.getElementById("lecturer-login").style.display = "none";
 			uploadSection.classList.remove("hidden");
 		} catch (err) {
