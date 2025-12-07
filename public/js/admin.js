@@ -33,8 +33,14 @@
 				}),
 			});
 
-			if (!resp.ok) throw new Error("Network response was not ok");
 			const data = await resp.json();
+
+			if (!resp.ok) {
+				const errorMsg = data.error || `Server error (${resp.status})`;
+				adminLoginError.textContent = "Error: " + errorMsg;
+				adminLoginError.style.display = "block";
+				return;
+			}
 
 			if (data.error) {
 				adminLoginError.textContent = "Error: " + data.error;

@@ -50,8 +50,16 @@
 					password: password,
 				}),
 			});
-			if (!resp.ok) throw new Error("Network response was not ok");
+
 			const data = await resp.json();
+
+			if (!resp.ok) {
+				const errorMsg = data.error || `Server error (${resp.status})`;
+				loginError.textContent = "Error: " + errorMsg;
+				loginError.style.display = "block";
+				return;
+			}
+
 			if (data.error) {
 				loginError.textContent = "Error: " + data.error;
 				loginError.style.display = "block";
@@ -102,8 +110,16 @@
 					credentials: "same-origin",
 				}
 			);
-			if (!resp.ok) throw new Error("Network response was not ok");
+
 			const data = await resp.json();
+
+			if (!resp.ok) {
+				const errorMsg = data.error || `Server error (${resp.status})`;
+				uploadError.textContent = "Error: " + errorMsg;
+				uploadError.style.display = "block";
+				return;
+			}
+
 			if (data.error) {
 				uploadError.textContent = "Error: " + data.error;
 				uploadError.style.display = "block";

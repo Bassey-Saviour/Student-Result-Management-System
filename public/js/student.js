@@ -29,8 +29,17 @@
 					password: password,
 				}),
 			});
-			if (!resp.ok) throw new Error("Network response was not ok");
+
 			const data = await resp.json();
+
+			if (!resp.ok) {
+				const errorMsg = data.error || `Server error (${resp.status})`;
+				errorMessage.textContent = "Error: " + errorMsg;
+				errorMessage.style.display = "block";
+				resultsSection.classList.add("hidden");
+				return;
+			}
+
 			if (data.error) {
 				errorMessage.textContent = "Error: " + data.error;
 				errorMessage.style.display = "block";

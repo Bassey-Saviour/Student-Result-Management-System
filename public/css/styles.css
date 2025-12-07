@@ -54,20 +54,6 @@ header {
 	width: 100%;
 }
 
-/* header::before {
-	content: "";
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: radial-gradient(
-		circle at 100% 0%,
-		rgba(255, 255, 255, 0.1) 0%,
-		transparent 50%
-	);
-} */
-
 header h1 {
 	font-weight: 800;
 	font-size: 1.8rem;
@@ -162,6 +148,7 @@ form {
 	border: 1px solid rgba(255, 255, 255, 0.8);
 	transition: all 0.3s ease;
 	backdrop-filter: blur(10px);
+	min-width: 470px;
 }
 
 form:hover {
@@ -450,12 +437,11 @@ footer {
 	);
 	color: #c62828;
 	border: 2px solid #ef5350;
-	padding: 1rem 1.5rem;
+	padding: 0.7rem 1.2rem;
 	border-radius: 8px;
 	margin-bottom: 1.5rem;
 	font-weight: 700;
 	display: none;
-	border-left: 4px solid #c62828;
 	animation: slideIn 0.3s ease;
 }
 
