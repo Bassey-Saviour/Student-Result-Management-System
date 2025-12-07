@@ -324,16 +324,41 @@
 	}
 
 	// Function to show message
+	// Function to show message in a modal (for delete feedback)
+	// Function to show inline message (for add forms)
 	function showMessage(elementId, message, isSuccess) {
 		const msgElement = document.getElementById(elementId);
 		msgElement.textContent = message;
 		msgElement.style.display = "block";
 		msgElement.style.color = isSuccess ? "green" : "red";
 		msgElement.style.fontWeight = "bold";
-
 		// Hide message after 5 seconds
 		setTimeout(() => {
 			msgElement.style.display = "none";
+		}, 5000);
+	}
+	function showMessageModal(message, isSuccess) {
+		const overlay = document.createElement("div");
+		overlay.className = "modal-overlay";
+		overlay.innerHTML = `
+			<div class="modal-card" role="dialog" aria-modal="true" aria-label="Message">
+				<h3 style="color: ${isSuccess ? "green" : "red"};">${
+			isSuccess ? "Success" : "Error"
+		}</h3>
+				<p>${message}</p>
+				<div class="modal-actions">
+					<button type="button" class="btn-primary" data-action="close">OK</button>
+				</div>
+			</div>
+		`;
+		document.body.appendChild(overlay);
+		const closeBtn = overlay.querySelector('[data-action="close"]');
+		closeBtn.addEventListener("click", () => {
+			overlay.remove();
+		});
+		// Auto-close after 5 seconds
+		setTimeout(() => {
+			if (document.body.contains(overlay)) overlay.remove();
 		}, 5000);
 	}
 
@@ -455,8 +480,9 @@
 
 			const result = await response.json();
 
+			// Show feedback in a modal
 			if (result.success) {
-				alert(result.message);
+				showMessageModal(result.message, true);
 				// Refresh the appropriate table
 				if (entityType === "student") {
 					const data = await fetchData("get_students");
@@ -475,11 +501,11 @@
 					}
 				}
 			} else {
-				alert("Error: " + result.error);
+				showMessageModal("Error: " + (result.error || "Delete failed"), false);
 			}
 		} catch (error) {
 			console.error("Delete error:", error);
-			alert("Failed to delete: " + error.message);
+			showMessageModal("Failed to delete: " + error.message, false);
 		}
 	}
 })();
